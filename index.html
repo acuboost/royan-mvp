@@ -1,211 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ROYAN AI Personal Styling</title>
-  <!-- Google Font similar to Maison Neue -->
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>Royan AI – Personal Stylist</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
-    /* ========== Theme Variables (Easy to Customize) ========== */
-    :root {
-      --color-primary: #000000;       /* Black for text/buttons */
-      --color-secondary: #E5D6B3;     /* Warm beige accent */
-      --color-bg: #FFFFFF;           /* White page background */
-      --font-family: 'Lato', sans-serif; /* Main font */
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      background: var(--color-bg);
-      color: var(--color-primary);
-      font-family: var(--font-family);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-    h1 {
-      margin: 1rem;
-      font-size: 2rem;
-    }
-    p { margin: 0 1rem 1.5rem; font-size: 1rem; }
-    /* Hero section */
-    .hero {
-      text-align: center;
-      padding: 1rem;
-      background: var(--color-secondary);
-      color: var(--color-primary);
-      width: 100%;
-    }
-    /* Chat container */
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      width: 95%;
-      max-width: 600px;
-      height: 70vh;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      background: #fafafa;
-      margin: 1rem 0 3rem;
-    }
-    .chat-log {
-      flex: 1;
-      padding: 1rem;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .message {
-      margin: 0.5rem 0;
-      padding: 0.75rem 1rem;
-      border-radius: 0.75rem;
-      max-width: 80%;
-      word-wrap: break-word;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-    }
-    .user-msg {
-      background: #e0e0e0;
-      align-self: flex-start;
-    }
-    .ai-msg {
-      background: #000;
-      color: #fff;
-      align-self: flex-end;
-    }
-    .message img {
-      max-width: 100%;
-      border-radius: 8px;
-      display: block;
-    }
-    /* Input area */
-    .input-area {
-      display: flex;
-      padding: 0.5rem;
-      background: #fff;
-      border-top: 1px solid #ddd;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .input-area input[type="file"] {
-      padding: 0.4rem;
-      cursor: pointer;
-    }
-    .input-area input[type="text"] {
-      flex: 1;
-      padding: 0.6rem;
-      font-size: 1rem;
-      border: 1px solid #e6e6e6;
-      border-radius: 6px;
-    }
-    .input-area button {
-      padding: 0.6rem 1rem;
-      background: var(--color-primary);
-      color: var(--color-bg);
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 6px;
-    }
-    /* Responsive tweaks */
-    @media (min-width: 720px) {
-      body { align-items: center; }
-      .chat-container { height: 70vh; }
-    }
-    footer {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 2rem;
-    }
+    body { font-family: Arial, sans-serif; background:#fafafa; margin:0; padding:0; }
+    header { background:#111; color:#fff; text-align:center; padding:1rem; font-size:1.4rem; }
+    #chat { max-width:600px; margin:2rem auto; background:#fff; border-radius:10px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1); padding:1rem; }
+    .msg { margin:.5rem 0; }
+    .user { text-align:right; }
+    .bubble { display:inline-block; padding:.6rem 1rem; border-radius:15px; max-width:80%; }
+    .user .bubble { background:#007bff; color:#fff; border-bottom-right-radius:3px; }
+    .ai .bubble { background:#f1f0f0; color:#111; border-bottom-left-radius:3px; }
+    #input-area { display:flex; margin-top:1rem; }
+    #input-area input { flex:1; padding:.7rem; border:1px solid #ccc; border-radius:8px; }
+    #input-area button { margin-left:.5rem; padding:.7rem 1.2rem; border:none;
+                         background:#007bff; color:#fff; border-radius:8px; cursor:pointer; }
+    #input-area button:hover { background:#0056b3; }
+    #file-input { display:none; }
+    #upload-label { margin-right:.5rem; padding:.6rem 1rem; background:#444; color:#fff;
+                    border-radius:8px; cursor:pointer; }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <h1>ROYAN AI Personal Styling</h1>
-    <p>Organizing your closet, reimagined</p>
+  <header>Royan AI – Your Personal Stylist</header>
+
+  <div id="chat"></div>
+
+  <div id="input-area">
+    <label id="upload-label" for="file-input">📷 Upload</label>
+    <input type="file" id="file-input" accept="image/*">
+    <input id="user-input" type="text" placeholder="Ask about your outfit...">
+    <button onclick="sendMessage()">Send</button>
   </div>
 
-  <div class="chat-container" role="region" aria-label="Royan chat">
-    <div class="chat-log" id="chatLog">
-      <!-- Chat messages will appear here -->
-    </div>
-    <div class="input-area">
-      <input type="file" id="imageInput" accept="image/*" aria-label="Upload clothing photo">
-      <input type="text" id="textInput" placeholder="Type your styling question..." aria-label="Styling question">
-      <button id="sendBtn" aria-label="Send message">Send</button>
-    </div>
-  </div>
+<script>
+  const chat = document.getElementById('chat');
+  const userInput = document.getElementById('user-input');
+  const fileInput = document.getElementById('file-input');
 
-  <footer>Demo prototype — AI integration coming soon. Use this demo to test flows and visuals.</footer>
+  function addMessage(sender, text) {
+    const msg = document.createElement('div');
+    msg.className = 'msg ' + sender;
+    msg.innerHTML = `<div class="bubble">${text}</div>`;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
-  <script>
-    // Simulate chat interaction in-browser (no backend)
-    const chatLog = document.getElementById('chatLog');
-    const imageInput = document.getElementById('imageInput');
-    const textInput = document.getElementById('textInput');
-    const sendBtn = document.getElementById('sendBtn');
+  async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text && !fileInput.files[0]) return;
+    addMessage('user', text || "📷 Sent a picture");
+    userInput.value = "";
 
-    // Utility: create message bubble
-    function createMessage(text, className) {
-      const div = document.createElement('div');
-      div.className = 'message ' + className;
-      div.textContent = text;
-      return div;
+    addMessage('ai', "Royan is thinking…");
+
+    // Generate basic fashion advice using simple rules
+    let advice = generateRuleBasedAdvice(text);
+
+    // Try to polish with Hugging Face (via Netlify proxy)
+    advice = await polishAdvice(advice);
+
+    // Replace placeholder with polished advice
+    const aiMsg = chat.querySelector('.ai:last-child .bubble');
+    aiMsg.innerText = advice;
+  }
+
+  function generateRuleBasedAdvice(text) {
+    text = text.toLowerCase();
+    if (text.includes("low cut")) return "An elegant updo would highlight the neckline of your low cut dress.";
+    if (text.includes("formal")) return "Consider a sleek bun or chignon for a polished formal look.";
+    if (text.includes("casual")) return "Loose waves or a ponytail would keep it chic yet relaxed.";
+    return "Try an updo, ponytail, or soft curls depending on the occasion.";
+  }
+
+  async function polishAdvice(advice) {
+    const prompt = "Rewrite this fashion advice in a warm, professional stylist tone. Keep it concise and add 1 quick how-to step: " + advice;
+    try {
+      const res = await fetch("/.netlify/functions/proxy-hf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inputs: prompt })
+      });
+      const data = await res.json();
+      if (Array.isArray(data) && data[0]?.generated_text) return data[0].generated_text;
+      if (data?.generated_text) return data.generated_text;
+      if (Array.isArray(data) && typeof data[0] === "string") return data[0];
+      return advice;
+    } catch (err) {
+      console.error("HF proxy error:", err);
+      return advice;
     }
-
-    // When an image is selected, display it as a chat message
-    imageInput.addEventListener('change', () => {
-      const file = imageInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const msgDiv = document.createElement('div');
-          msgDiv.className = 'message user-msg';
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.alt = 'Uploaded clothing photo';
-          msgDiv.appendChild(img);
-          chatLog.appendChild(msgDiv);
-
-          // Placeholder AI response after small delay
-          setTimeout(() => {
-            const aiDiv = createMessage("Royan: Nice! I see a classic cut — try pairing with a statement clutch and low bun.", 'ai-msg');
-            chatLog.appendChild(aiDiv);
-            chatLog.scrollTop = chatLog.scrollHeight;
-          }, 600);
-
-          chatLog.scrollTop = chatLog.scrollHeight;
-        };
-        reader.readAsDataURL(file);
-      }
-      // reset input so same file can be selected again if needed
-      imageInput.value = '';
-    });
-
-    // When the Send button is clicked, append the user's question and a placeholder reply
-    sendBtn.addEventListener('click', () => {
-      const text = textInput.value.trim();
-      if (!text) return;
-      // User message
-      const userDiv = createMessage(text, 'user-msg');
-      chatLog.appendChild(userDiv);
-      // Placeholder AI response
-      const aiDiv = createMessage("Royan: [Placeholder response – AI integration coming soon]", 'ai-msg');
-      chatLog.appendChild(aiDiv);
-      // Scroll to bottom
-      chatLog.scrollTop = chatLog.scrollHeight;
-      textInput.value = '';
-    });
-
-    // Allow pressing Enter to send
-    textInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        sendBtn.click();
-      }
-    });
-  </script>
+  }
+</script>
 </body>
 </html>
